@@ -1,0 +1,22 @@
+package resource;
+
+public class UserResource {
+    private int id;
+    private String name;
+
+    public UserResource(int id, String name){
+        this.id = id;
+        this.name = name;
+    }
+
+    public UserResource(){}
+
+    public String getName(){
+        return name;
+    }
+
+    public int getID(){
+        return id;
+    }
+
+}

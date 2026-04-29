@@ -1,0 +1,17 @@
+# Ignore everything
+*
+
+# But keep .gitignore itself
+!.gitignore
+
+# Keep required root files
+!/build.xml
+!/manifest.st
+
+# Keep source code
+!/src/
+!/src/**
+
+# Keep NetBeans project configuration
+!/nbproject/
+!/nbproject/**
