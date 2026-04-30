@@ -6,7 +6,7 @@
 
 # Keep required root files
 !/build.xml
-!/manifest.st
+!/manifest.mf
 
 # Keep source code
 !/src/
