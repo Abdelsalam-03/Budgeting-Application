@@ -8,7 +8,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.geometry.Insets;
 
 import resource.TransactionResource;
 import manager.TransactionManager;
@@ -64,7 +63,7 @@ public class TransactionsView {
         ObservableList<TransactionResource> transactions = FXCollections.observableArrayList();
         ListView<TransactionResource> listView = new ListView<>(transactions);
 
-        listView.setCellFactory(param -> new TransactionCell(transactions));
+        listView.setCellFactory(param -> new TransactionCell(transactions, id -> transactionManager.deleteTransaction(id)));
 
         transactions.addAll(
                 transactionManager.getTransactions()

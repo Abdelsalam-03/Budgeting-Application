@@ -1,5 +1,6 @@
 package view.component;
 
+import java.util.function.Consumer;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,11 +12,12 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
-import manager.TransactionManager;
 import resource.TransactionResource;
 
 public class TransactionCell extends ListCell<TransactionResource> {
 
+    private Consumer<Integer> deleteAction;
+    
     private HBox root = new HBox(10);
 
     private Label amountLabel = new Label();
@@ -26,8 +28,9 @@ public class TransactionCell extends ListCell<TransactionResource> {
 
     private ObservableList<TransactionResource> listRef;
 
-    public TransactionCell(ObservableList<TransactionResource> listRef) {
+    public TransactionCell(ObservableList<TransactionResource> listRef, Consumer<Integer> action) {
         this.listRef = listRef;
+        this.deleteAction = action;
 
         root.setAlignment(Pos.CENTER_LEFT);
         root.setPadding(new Insets(10));
@@ -48,8 +51,7 @@ public class TransactionCell extends ListCell<TransactionResource> {
 
         deleteBtn.setOnAction(e -> {
             try {
-                TransactionManager mg = new TransactionManager();
-                mg.deleteTransaction(getItem().id);
+                deleteAction.accept(getItem().id);
                 TransactionResource item = getItem();
                 if (item != null) {
                     listRef.remove(item);
