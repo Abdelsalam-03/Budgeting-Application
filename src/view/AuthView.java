@@ -25,8 +25,7 @@ public class AuthView {
         showLoginView();
         layout.getChildren().add(root);
         VBox.setVgrow(root, Priority.ALWAYS);
-        return layout;
-        
+        return layout;   
     }
     
     private HBox createHeader() {

@@ -126,6 +126,7 @@ public class AddTransactionView {
 
         form.setPadding(new Insets(20));
         form.setMaxWidth(400);
+        form.setMaxHeight(400);
 
         form.setStyle(
                 "-fx-background-color: white;"

@@ -1,5 +1,6 @@
 package view;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -10,21 +11,17 @@ public class LoginView {
 
     // Auth manager
     private final AuthenticationManager authManager;
-    
+
     // GUI components
     private TextField emailField;
     private PasswordField passwordField;
     Label message;
-    
-    public LoginView(){
-       authManager = AuthenticationManager.getAuthenticationManager();
+
+    public LoginView() {
+        authManager = AuthenticationManager.getAuthenticationManager();
     }
 
     public VBox getView() {
-
-        VBox layout = new VBox(10);
-        layout.setAlignment(Pos.CENTER);
-        
         Label title = new Label("Login");
 
         emailField = new TextField();
@@ -38,13 +35,32 @@ public class LoginView {
         message = new Label();
 
         loginBtn.setOnAction(e -> loginHandler());
+        
 
-        layout.getChildren().addAll(title, emailField, passwordField, loginBtn, message);
+        // Form Layout
+        VBox form = new VBox(15,
+                title,
+                emailField,
+                passwordField,
+                loginBtn,
+                message
+        );
+        form.setAlignment(Pos.CENTER);
 
-        return layout;
+        form.setPadding(new Insets(20));
+        form.setMaxWidth(400);
+        form.setMaxHeight(300);
+
+        form.setStyle(
+                "-fx-background-color: white;"
+                + "-fx-background-radius: 12;"
+                + "-fx-border-color: #dddddd;"
+                + "-fx-border-radius: 12;"
+        );
+        return form;
     }
 
-    private void loginHandler(){
+    private void loginHandler() {
         message.setText("");
         try {
             String email = emailField.getText();
@@ -58,10 +74,10 @@ public class LoginView {
                 return;
             }
 
-            if(! authManager.logIn(email, password)){
+            if (!authManager.logIn(email, password)) {
                 message.setText("Invalid credentials");
             }
-            
+
         } catch (Exception ex) {
             message.setText(ex.getMessage());
             ex.printStackTrace();
