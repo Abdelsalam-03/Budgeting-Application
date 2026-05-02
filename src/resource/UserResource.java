@@ -9,8 +9,6 @@ public class UserResource {
         this.name = name;
     }
 
-    public UserResource(){}
-
     public String getName(){
         return name;
     }

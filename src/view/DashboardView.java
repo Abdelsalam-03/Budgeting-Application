@@ -35,17 +35,20 @@ public class DashboardView {
 
     private HBox createHeader() {
         ToggleButton homeBtn = new ToggleButton("home");
+        ToggleButton transactionsBtn = new ToggleButton("Transactions");
         ToggleButton logOutBtn = new ToggleButton("Logout");
 
         ToggleGroup group = new ToggleGroup();
         homeBtn.setToggleGroup(group);
+        transactionsBtn.setToggleGroup(group);
         logOutBtn.setToggleGroup(group);
 
         // Default selected
         homeBtn.setSelected(true);
 
         // Actions
-        homeBtn.setOnAction(e -> System.out.println("Show Home Page"));
+        homeBtn.setOnAction(e -> showHomeView());
+        transactionsBtn.setOnAction(e -> showTransactionsView());
         logOutBtn.setOnAction(e -> authManager.logout());
         logOutBtn.setStyle(
                 "-fx-background-color: #E53935;"
@@ -54,7 +57,7 @@ public class DashboardView {
                 + "-fx-font-weight: bold;"
         );
 
-        HBox header = new HBox(10, homeBtn, logOutBtn);
+        HBox header = new HBox(10, homeBtn, transactionsBtn, logOutBtn);
         header.setStyle("-fx-padding: 10; -fx-background-color: white;");
 
         return header;
@@ -70,6 +73,11 @@ public class DashboardView {
         layout.getChildren().addAll(title);
 
         root.setCenter(layout);
+    }
+    
+    public void showTransactionsView() {
+        TransactionsView view = new TransactionsView();
+        root.setCenter(view.getView());
     }
 
 }
