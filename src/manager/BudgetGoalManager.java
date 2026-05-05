@@ -7,17 +7,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * BudgetGoalManager — service / use-case layer.
- *
- * Mirrors TransactionManager: delegates directly to BudgetGoal static helpers.
- *
- * SRP : Handles only budget-goal business rules; no UI, no persistence details.
- * OCP : New business rules extend this class without touching the model or views.
- */
+
 public class BudgetGoalManager {
 
-    // ─── Commands ─────────────────────────────────────────────────────────────
+   
 
     public BudgetGoalResource addGoal(int userId, String name,
                                       double targetAmount, int categoryId, Date deadline) {
@@ -26,7 +19,7 @@ public class BudgetGoalManager {
     }
 
     public void recordProgress(int goalId, double amount) {
-        BudgetGoal goal = new BudgetGoal(goalId); // lookup by id
+        BudgetGoal goal = new BudgetGoal(goalId); 
         goal.addProgress(amount);
     }
 
@@ -35,7 +28,7 @@ public class BudgetGoalManager {
         goal.delete();
     }
 
-    // ─── Queries ──────────────────────────────────────────────────────────────
+   
 
     public List<BudgetGoalResource> getGoalsForUser(int userId) {
         return BudgetGoal.all(userId)
@@ -48,8 +41,7 @@ public class BudgetGoalManager {
         return toResource(new BudgetGoal(goalId));
     }
 
-    // ─── Mapper ───────────────────────────────────────────────────────────────
-
+    
     private BudgetGoalResource toResource(BudgetGoal g) {
         return new BudgetGoalResource(
                 g.id, g.userId, g.name,

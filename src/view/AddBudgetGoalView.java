@@ -11,20 +11,13 @@ import java.util.Date;
 
 import manager.BudgetGoalManager;
 
-/**
- * AddBudgetGoalView — form for creating a new budget goal.
- *
- * SRP : Only responsible for capturing user input and delegating to the manager.
- *       No business logic lives here.
- *
- * Matches the style and structure of {@link AddTransactionView}.
- */
+
 public class AddBudgetGoalView {
 
-    // Injected via constructor — DIP: view depends on manager, not concrete repo
+    
     private final BudgetGoalManager manager;
 
-    // Hard-coded user for now, same assumption as AddTransactionView
+  
     private static final int CURRENT_USER_ID = 1;
 
     public AddBudgetGoalView() {
@@ -35,26 +28,26 @@ public class AddBudgetGoalView {
         this.manager = manager;
     }
 
-    // ─── Build ────────────────────────────────────────────────────────────────
+    
 
     public Parent getView() {
 
-        // Goal name
+        
         TextField nameField = new TextField();
         nameField.setPromptText("e.g. Save for laptop");
 
-        // Target amount
+        
         TextField targetField = new TextField();
         targetField.setPromptText("Enter target amount");
 
-        // Category (0 = savings / general)
+        
         ComboBox<String> categoryDropdown = new ComboBox<>();
         categoryDropdown.getItems().addAll(
                 "Savings / General", "Food", "Transport", "Entertainment", "Utilities", "Shopping"
         );
         categoryDropdown.getSelectionModel().selectFirst();
 
-        // Deadline
+        
         DatePicker deadlinePicker = new DatePicker(LocalDate.now().plusMonths(1));
 
         CheckBox noDeadlineCheck = new CheckBox("No deadline");
@@ -62,11 +55,11 @@ public class AddBudgetGoalView {
                 deadlinePicker.setDisable(isChecked)
         );
 
-        // Status label for feedback
+        
         Label statusLabel = new Label();
         statusLabel.setStyle("-fx-font-size: 12;");
 
-        // Submit button
+       
         Button createBtn = new Button("Create Goal");
         createBtn.setStyle(
                 "-fx-background-color: #3F51B5;"
@@ -80,7 +73,7 @@ public class AddBudgetGoalView {
                 deadlinePicker, noDeadlineCheck, statusLabel
         ));
 
-        // ─── Layout ───────────────────────────────────────────────────────────
+        
 
         HBox deadlineRow = new HBox(10, deadlinePicker, noDeadlineCheck);
         deadlineRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
@@ -107,7 +100,7 @@ public class AddBudgetGoalView {
         return new StackPane(form);
     }
 
-    // ─── Event handler (SRP: kept private, returns void) ─────────────────────
+   
 
     private void handleCreate(TextField nameField,
                                TextField targetField,
@@ -128,7 +121,7 @@ public class AddBudgetGoalView {
 
             manager.addGoal(CURRENT_USER_ID, name, targetAmount, categoryId, deadline);
 
-            // Reset form
+            
             nameField.clear();
             targetField.clear();
             categoryDropdown.getSelectionModel().selectFirst();
@@ -143,7 +136,7 @@ public class AddBudgetGoalView {
         }
     }
 
-    // ─── UI helpers ──────────────────────────────────────────────────────────
+    
 
     private VBox labeledField(String labelText, javafx.scene.Node field) {
         Label label = new Label(labelText);

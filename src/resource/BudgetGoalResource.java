@@ -2,14 +2,7 @@ package resource;
 
 import java.util.Date;
 
-/**
- * BudgetGoalResource — read-only DTO / view-model.
- *
- * SRP : Carries only the data views need; no business logic.
- * DIP : Views depend on this interface-like DTO, not on the raw model.
- *
- * Mirrors TransactionResource pattern.
- */
+
 public class BudgetGoalResource {
 
     public final int    id;
@@ -34,7 +27,7 @@ public class BudgetGoalResource {
         this.isCompleted   = isCompleted;
     }
 
-    /** Convenience: progress 0.0 – 1.0 without touching the model. */
+    
     public double progressRatio() {
         if (targetAmount == 0) return 0;
         return Math.min(currentAmount / targetAmount, 1.0);

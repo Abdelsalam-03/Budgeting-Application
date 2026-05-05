@@ -13,14 +13,6 @@ import java.text.SimpleDateFormat;
 
 import resource.BudgetGoalResource;
 
-/**
- * ViewBudgetGoalDialog — modal detail view for a single budget goal.
- *
- * SRP  : Only responsible for displaying goal details; no business logic.
- * OCP  : Add new fields by extending addRow() calls; nothing else changes.
- *
- * Mirrors {@link ViewTransactionDialog} in structure and style.
- */
 public class ViewBudgetGoalDialog {
 
     public static void show(BudgetGoalResource goal) {
@@ -31,8 +23,7 @@ public class ViewBudgetGoalDialog {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        // ─── Header ───────────────────────────────────────────────────────────
-
+        
         Label title = new Label("Budget Goal Details");
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
@@ -49,7 +40,7 @@ public class ViewBudgetGoalDialog {
         HBox header = new HBox(10, title, statusBadge);
         header.setAlignment(Pos.CENTER_LEFT);
 
-        // ─── Details grid ─────────────────────────────────────────────────────
+        
 
         GridPane grid = new GridPane();
         grid.setVgap(10);
@@ -63,7 +54,7 @@ public class ViewBudgetGoalDialog {
         addRow(grid, 5, "Deadline:",
                 goal.deadline != null ? sdf.format(goal.deadline) : "None");
 
-        // ─── Progress section ─────────────────────────────────────────────────
+        
 
         double ratio = goal.progressRatio();
 
@@ -86,7 +77,7 @@ public class ViewBudgetGoalDialog {
                 + "-fx-background-radius: 8;"
         );
 
-        // ─── Root layout ──────────────────────────────────────────────────────
+      
 
         VBox root = new VBox(20, header, grid, progressBox);
         root.setAlignment(Pos.TOP_LEFT);
@@ -100,7 +91,7 @@ public class ViewBudgetGoalDialog {
 
         Scene scene = new Scene(root, 420, 390);
 
-        // Close on ESC
+        
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case ESCAPE:
@@ -112,7 +103,7 @@ public class ViewBudgetGoalDialog {
         stage.showAndWait();
     }
 
-    // ─── Helper ───────────────────────────────────────────────────────────────
+    
 
     private static void addRow(GridPane grid, int row, String labelText, String value) {
         Label label = new Label(labelText);

@@ -13,22 +13,15 @@ import javafx.scene.layout.*;
 
 import resource.BudgetGoalResource;
 
-/**
- * BudgetGoalCell — custom ListCell that renders a single budget goal row.
- *
- * SRP  : Only responsible for rendering one cell; delete is delegated via callback.
- * OCP  : Visual changes are isolated here; no other class needs to change.
- *
- * Mirrors {@link TransactionCell} in structure and conventions.
- */
+
 public class BudgetGoalCell extends ListCell<BudgetGoalResource> {
 
     private final Consumer<Integer>                 deleteAction;
     private final ObservableList<BudgetGoalResource> listRef;
 
-    // ─── Reusable node references ─────────────────────────────────────────────
+    
     private final HBox      root        = new HBox(12);
-    private final Label     statusIcon  = new Label();  // ✓ or ◎
+    private final Label     statusIcon  = new Label();  
     private final Label     nameLabel   = new Label();
     private final Label     amountLabel = new Label();
     private final ProgressBar progressBar = new ProgressBar(0);
@@ -44,7 +37,7 @@ public class BudgetGoalCell extends ListCell<BudgetGoalResource> {
         wireHandlers();
     }
 
-    // ─── Layout ───────────────────────────────────────────────────────────────
+    
 
     private void buildLayout() {
         root.setAlignment(Pos.CENTER_LEFT);
@@ -66,10 +59,10 @@ public class BudgetGoalCell extends ListCell<BudgetGoalResource> {
         root.getChildren().addAll(statusIcon, infoBox, spacer, deleteBtn);
     }
 
-    // ─── Handlers ─────────────────────────────────────────────────────────────
+    
 
     private void wireHandlers() {
-        // Click row → open detail dialog
+        
         root.setOnMouseClicked(e -> {
             BudgetGoalResource item = getItem();
             if (item != null) {
@@ -77,7 +70,7 @@ public class BudgetGoalCell extends ListCell<BudgetGoalResource> {
             }
         });
 
-        // Delete button
+        
         deleteBtn.setOnAction(e -> {
             BudgetGoalResource item = getItem();
             if (item == null) return;
@@ -90,7 +83,7 @@ public class BudgetGoalCell extends ListCell<BudgetGoalResource> {
         });
     }
 
-    // ─── Cell update (called by JavaFX) ───────────────────────────────────────
+    
 
     @Override
     protected void updateItem(BudgetGoalResource item, boolean empty) {

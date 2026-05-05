@@ -4,30 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
-/**
- * BudgetGoal model — mirrors Transaction/User pattern.
- *
- * SRP  : Only responsible for data definition and fake-DB CRUD.
- * OCP  : New query methods can be added without touching existing ones.
- */
+
 public class BudgetGoal {
 
     public int    id;
     public int    userId;
-    public String name;          // e.g. "Save for laptop"
-    public double targetAmount;  // the goal ceiling / savings target
-    public double currentAmount; // amount already spent / saved toward goal
-    public int    categoryId;    // which spending category this goal tracks (0 = savings)
-    public Date   deadline;      // target completion date
+    public String name;          
+    public double targetAmount;  
+    public double currentAmount; 
+    public int    categoryId;    
+    public Date   deadline;      
     public boolean isCompleted;
 
-    // ─── Fake database ────────────────────────────────────────────────────────
+    
 
     private static final List<BudgetGoal> goals = new ArrayList<>();
 
     static {
-        Date soon = new Date(System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000); // +30 days
-        Date later = new Date(System.currentTimeMillis() + 90L * 24 * 60 * 60 * 1000); // +90 days
+        Date soon = new Date(System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000); 
+        Date later = new Date(System.currentTimeMillis() + 90L * 24 * 60 * 60 * 1000); 
 
         goals.add(new BudgetGoal(1, 1, "Save for Laptop",      5000.0, 1200.0, 0, later, false));
         goals.add(new BudgetGoal(2, 1, "Monthly Food Budget",  800.0,  300.0,  1, soon,  false));
@@ -36,7 +31,7 @@ public class BudgetGoal {
         goals.add(new BudgetGoal(5, 1, "Emergency Fund",       3000.0, 3000.0, 0, later, true));
     }
 
-    // ─── Constructors ─────────────────────────────────────────────────────────
+    
 
     private BudgetGoal(int id, int userId, String name,
                        double targetAmount, double currentAmount,
@@ -51,7 +46,7 @@ public class BudgetGoal {
         this.isCompleted   = isCompleted;
     }
 
-    /** Search by ID. */
+    
     public BudgetGoal(int id) {
         for (BudgetGoal g : goals) {
             if (g.id == id) {
@@ -62,10 +57,10 @@ public class BudgetGoal {
         throw new RuntimeException("BudgetGoal not found with id: " + id);
     }
 
-    /** Empty constructor. */
+    
     public BudgetGoal() {}
 
-    // ─── Static CRUD helpers ──────────────────────────────────────────────────
+    
 
     public static BudgetGoal create(int userId, String name,
                                     double targetAmount, int categoryId, Date deadline) {
@@ -90,10 +85,10 @@ public class BudgetGoal {
         return result;
     }
 
-    /** Update current progress and auto-complete when target is reached. */
+    
     public void addProgress(double amount) {
         if (amount <= 0) throw new RuntimeException("Progress amount must be positive");
-        // find and mutate the record in the list
+        
         for (BudgetGoal g : goals) {
             if (g.id == this.id) {
                 g.currentAmount = Math.min(g.currentAmount + amount, g.targetAmount);
@@ -109,9 +104,9 @@ public class BudgetGoal {
         goals.removeIf(g -> g.id == this.id);
     }
 
-    // ─── Helpers ──────────────────────────────────────────────────────────────
+    
 
-    /** Returns progress as a value between 0.0 and 1.0. */
+   
     public double progressRatio() {
         if (targetAmount == 0) return 0;
         return Math.min(currentAmount / targetAmount, 1.0);
