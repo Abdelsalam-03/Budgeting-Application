@@ -20,27 +20,25 @@ public class DashboardView {
     }
 
     public VBox getView() {
-
         VBox layout = new VBox();
-
         HBox header = createHeader();
-
         root.setTop(header);
         showHomeView();
         layout.getChildren().add(root);
         VBox.setVgrow(root, Priority.ALWAYS);
         return layout;
-
     }
 
     private HBox createHeader() {
-        ToggleButton homeBtn = new ToggleButton("home");
+        ToggleButton homeBtn         = new ToggleButton("home");
         ToggleButton transactionsBtn = new ToggleButton("Transactions");
-        ToggleButton logOutBtn = new ToggleButton("Logout");
+        ToggleButton budgetGoalsBtn  = new ToggleButton("Budget Goals");
+        ToggleButton logOutBtn       = new ToggleButton("Logout");
 
         ToggleGroup group = new ToggleGroup();
         homeBtn.setToggleGroup(group);
         transactionsBtn.setToggleGroup(group);
+        budgetGoalsBtn.setToggleGroup(group);
         logOutBtn.setToggleGroup(group);
 
         // Default selected
@@ -49,6 +47,7 @@ public class DashboardView {
         // Actions
         homeBtn.setOnAction(e -> showHomeView());
         transactionsBtn.setOnAction(e -> showTransactionsView());
+        budgetGoalsBtn.setOnAction(e -> showBudgetGoalsView());
         logOutBtn.setOnAction(e -> authManager.logout());
         logOutBtn.setStyle(
                 "-fx-background-color: #E53935;"
@@ -57,27 +56,27 @@ public class DashboardView {
                 + "-fx-font-weight: bold;"
         );
 
-        HBox header = new HBox(10, homeBtn, transactionsBtn, logOutBtn);
+        HBox header = new HBox(10, homeBtn, transactionsBtn, budgetGoalsBtn, logOutBtn);
         header.setStyle("-fx-padding: 10; -fx-background-color: white;");
 
         return header;
     }
 
     public void showHomeView() {
-//        View view = new View();
         VBox layout = new VBox(10);
         layout.setAlignment(Pos.CENTER);
-
         Label title = new Label("Welcome To Home Page");
-
         layout.getChildren().addAll(title);
-
         root.setCenter(layout);
     }
-    
+
     public void showTransactionsView() {
         TransactionsView view = new TransactionsView();
         root.setCenter(view.getView());
     }
 
+    public void showBudgetGoalsView() {
+        AddBudgetGoalView view = new AddBudgetGoalView();
+        root.setCenter(view.getView());
+    }
 }
