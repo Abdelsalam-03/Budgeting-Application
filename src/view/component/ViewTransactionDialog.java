@@ -8,7 +8,6 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 
 import resource.TransactionResource;
@@ -45,7 +44,7 @@ public class ViewTransactionDialog {
         addRow(grid, 1, "Amount:", String.format("%.2f EGP", transaction.amount));
         addRow(grid, 2, "Date:", transaction.date.format(formatter));
         if (!transaction.isIncome) {
-            addRow(grid, 3, "Category ID:", String.valueOf(transaction.categoryId));
+            addRow(grid, 3, "Category: ", transaction.categoryName);
         }
 
         Label notesTitle = new Label("Notes:");

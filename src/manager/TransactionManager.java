@@ -9,7 +9,7 @@ import resource.TransactionResource;
 
 public class TransactionManager {
 
-    public boolean addTransaction(double amount, int categoryId, LocalDateTime date, String notes, boolean isIncome) {
+    public boolean addTransaction(double amount, Integer categoryId, LocalDateTime date, String notes, boolean isIncome) {
 
         try {
             int userId = AuthenticationManager.getAuthenticationManager().getUser().getID();

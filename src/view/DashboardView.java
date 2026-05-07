@@ -64,15 +64,19 @@ public class DashboardView {
     }
 
     public void showHomeView() {
-//        View view = new View();
-        VBox layout = new VBox(10);
-        layout.setAlignment(Pos.CENTER);
+        final HomeView[] dashboardRef = new HomeView[1];
 
-        Label title = new Label("Welcome To Home Page");
+        HomeView dashboard = new HomeView(() ->
+            root.setCenter(new BudgetingView(() ->
+                root.setCenter(dashboardRef[0].getView())
+            ).getView())
+        );
 
-        layout.getChildren().addAll(title);
+        dashboardRef[0] = dashboard;
 
-        root.setCenter(layout);
+        root.setCenter(dashboard.getView());
+
+//        root.setCenter(layout);
     }
     
     public void showTransactionsView() {

@@ -49,6 +49,88 @@ public abstract class Model {
         terminateConnection();
     }
 
+    public int insertAndReturnId(String[] columns, Object[] values) throws SQLException {
+
+        initializeConnection();
+
+        StringJoiner columnPart = new StringJoiner(", ");
+        StringJoiner valuePart = new StringJoiner(", ");
+
+        for (String col : columns) {
+            columnPart.add(col);
+            valuePart.add("?");
+        }
+
+        String sql = "INSERT INTO " + getTable()
+                + " (" + columnPart + ") VALUES (" + valuePart + ")";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            for (int i = 0; i < values.length; i++) {
+                stmt.setObject(i + 1, values[i]);
+            }
+
+            stmt.executeUpdate();
+
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+            throw new SQLException("No ID returned");
+
+        } finally {
+            terminateConnection();
+        }
+    }
+
+    public void update(String[] columns, Object[] values,
+            String[] whereColumns, Object[] whereValues) throws SQLException {
+
+        initializeConnection();
+
+        if (columns.length != values.length) {
+            throw new IllegalArgumentException("Columns and values must have same length");
+        }
+
+        if (whereColumns.length != whereValues.length) {
+            throw new IllegalArgumentException("Where columns and values must have same length");
+        }
+
+        StringJoiner setPart = new StringJoiner(", ");
+        for (String col : columns) {
+            setPart.add(col + " = ?");
+        }
+
+        StringJoiner wherePart = new StringJoiner(" AND ");
+        for (String col : whereColumns) {
+            wherePart.add(col + " = ?");
+        }
+
+        String sql = "UPDATE " + getTable()
+                + " SET " + setPart
+                + " WHERE " + wherePart;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            int index = 1;
+
+            // set UPDATE values
+            for (Object value : values) {
+                stmt.setObject(index++, value);
+            }
+
+            // set WHERE values
+            for (Object value : whereValues) {
+                stmt.setObject(index++, value);
+            }
+
+            stmt.executeUpdate();
+        }
+
+        terminateConnection();
+    }
+
     public void destroy(
             String[] whereColumns,
             Object[] whereValues) throws SQLException {
@@ -92,15 +174,25 @@ public abstract class Model {
         }
 
         StringJoiner wherePart = new StringJoiner(" AND ");
+        int i = 0;
         for (String col : whereColumns) {
-            wherePart.add(col + " = ?");
+
+            if (whereValues[i] == null) {
+                wherePart.add(whereColumns[i] + " IS NULL");
+            } else {
+                wherePart.add(whereColumns[i] + " = ?");
+            }
+            i++;
         }
 
         String sql = "SELECT TOP(1) * FROM " + getTable() + " WHERE " + wherePart;
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            for (int i = 0; i < whereValues.length; i++) {
+            for (i = 0; i < whereValues.length; i++) {
+                if (whereValues[i] == null) {
+                    continue;
+                }
                 stmt.setObject(i + 1, whereValues[i]);
             }
 
@@ -129,8 +221,15 @@ public abstract class Model {
         }
 
         StringJoiner wherePart = new StringJoiner(" AND ");
+        int i = 0;
         for (String col : whereColumns) {
-            wherePart.add(col + " = ?");
+
+            if (whereValues[i] == null) {
+                wherePart.add(whereColumns[i] + " IS NULL");
+            } else {
+                wherePart.add(whereColumns[i] + " = ?");
+            }
+            i++;
         }
 
         String sql = "SELECT * FROM " + getTable() + " WHERE " + wherePart;
@@ -139,7 +238,10 @@ public abstract class Model {
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            for (int i = 0; i < whereValues.length; i++) {
+            for (i = 0; i < whereValues.length; i++) {
+                if (whereValues[i] == null) {
+                    continue;
+                }
                 stmt.setObject(i + 1, whereValues[i]);
             }
 

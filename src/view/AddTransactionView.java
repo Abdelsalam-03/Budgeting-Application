@@ -11,8 +11,10 @@ import javafx.scene.layout.*;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import manager.BudgetController;
 
 import manager.TransactionManager;
+import model.BudgetCategory;
 
 public class AddTransactionView {
 
@@ -47,10 +49,10 @@ public class AddTransactionView {
         TextField amountField = new TextField();
         amountField.setPromptText("Enter amount");
 
-        ComboBox<String> categoryDropdown = new ComboBox<>();
-        categoryDropdown.getItems().addAll(
-                "Food", "Transport", "Shopping"
-        );
+                ComboBox<BudgetCategory> categoryDropdown = new ComboBox<>();
+                BudgetController controller = BudgetController.getInstance();
+        categoryDropdown.getItems().addAll(controller.getCategories());
+        categoryDropdown.setPromptText("Select a category");
 
         DatePicker datePicker = new DatePicker(LocalDateTime.now().toLocalDate());
 
@@ -98,13 +100,13 @@ public class AddTransactionView {
             boolean isIncome = incomeToggle.isSelected();
 
             double amount = Double.parseDouble(amountField.getText());
-            String category = isIncome ? "0" : categoryDropdown.getValue();
+            Integer category = isIncome ? null : categoryDropdown.getValue().id;
             LocalDateTime date = LocalDateTime.of(datePicker.getValue(), LocalTime.of(0, 0, 0, 0));
             String notes = notesArea.getText();
                         
             TransactionManager tmg = new TransactionManager();
             try {
-                tmg.addTransaction(amount, 1, date, notes, isIncome);
+                tmg.addTransaction(amount, category, date, notes, isIncome);
                 amountField.setText("");
                 notesArea.setText("");
             } catch (Exception ee) {

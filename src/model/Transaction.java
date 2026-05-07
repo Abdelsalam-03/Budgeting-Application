@@ -16,6 +16,7 @@ public class Transaction extends Model {
     public String notes;
     public LocalDateTime date;
     public boolean isIncome;
+    private String category = null;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 
     // Full constructor
@@ -68,7 +69,7 @@ public class Transaction extends Model {
     }
 
     // Creation method
-    public static void create(double amount, int userId, int categoryId, LocalDateTime date, String notes, boolean isIncome) {
+    public static void create(double amount, int userId, Integer categoryId, LocalDateTime date, String notes, boolean isIncome) {
         try {
             String[] cols = {"amount", "user_id", "budgeting_category_id", "transaction_date", "notes", "is_income"};
             Object[] values = {amount, userId, categoryId, date, notes, isIncome};
@@ -106,5 +107,16 @@ public class Transaction extends Model {
             e.printStackTrace();
             throw new RuntimeException("Exception Occurred");
         }
+    }
+
+    public String getCategory(){
+        if (!isIncome || category == null) {
+            BudgetCategory budgetCategory = new BudgetCategory(categoryId);
+            category = budgetCategory.name;
+        }
+        if (isIncome) {
+            category = "";
+        }
+        return category;
     }
 }
