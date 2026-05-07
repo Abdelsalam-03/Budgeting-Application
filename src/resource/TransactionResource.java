@@ -1,18 +1,18 @@
 package resource;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import model.Transaction;
 
 public class TransactionResource {
 
     public int id;
     public double amount;
-    public Date date;
+    public LocalDateTime date;
     public int categoryId;
     public boolean isIncome;
     public String notes;
 
-    public TransactionResource(int id, double amount, int categoryId, String notes, Date date, boolean isIncome) {
+    public TransactionResource(int id, double amount, int categoryId, String notes, LocalDateTime date, boolean isIncome) {
         this.id = id;
         this.amount = amount;
         this.categoryId = categoryId;

@@ -9,9 +9,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
-import java.time.LocalDate;
-import java.util.Date;
-import java.time.ZoneId;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import manager.TransactionManager;
 
@@ -53,7 +52,7 @@ public class AddTransactionView {
                 "Food", "Transport", "Shopping"
         );
 
-        DatePicker datePicker = new DatePicker(LocalDate.now());
+        DatePicker datePicker = new DatePicker(LocalDateTime.now().toLocalDate());
 
         CheckBox nowCheck = new CheckBox("Now");
         nowCheck.setSelected(true);
@@ -83,7 +82,7 @@ public class AddTransactionView {
         // Now checkbox behavior
         nowCheck.selectedProperty().addListener((obs, oldVal, isNow) -> {
             if (isNow) {
-                datePicker.setValue(LocalDate.now());
+                datePicker.setValue(LocalDateTime.now().toLocalDate());
                 datePicker.setDisable(true);
             } else {
                 datePicker.setDisable(false);
@@ -100,17 +99,16 @@ public class AddTransactionView {
 
             double amount = Double.parseDouble(amountField.getText());
             String category = isIncome ? "0" : categoryDropdown.getValue();
-            Date date = Date.from(
-                    datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()
-            );
+            LocalDateTime date = LocalDateTime.of(datePicker.getValue(), LocalTime.of(0, 0, 0, 0));
             String notes = notesArea.getText();
-
+                        
             TransactionManager tmg = new TransactionManager();
             try {
-                tmg.addTransaction(amount, 0, new Date(), notes, isIncome);
+                tmg.addTransaction(amount, 1, date, notes, isIncome);
                 amountField.setText("");
                 notesArea.setText("");
             } catch (Exception ee) {
+                ee.printStackTrace();
             }
         });
 

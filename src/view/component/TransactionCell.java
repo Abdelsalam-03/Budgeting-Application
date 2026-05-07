@@ -1,5 +1,6 @@
 package view.component;
 
+import java.time.format.DateTimeFormatter;
 import java.util.function.Consumer;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -27,6 +28,7 @@ public class TransactionCell extends ListCell<TransactionResource> {
     private Button deleteBtn = new Button("Delete");
 
     private ObservableList<TransactionResource> listRef;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy - hh:mm a");
 
     public TransactionCell(ObservableList<TransactionResource> listRef, Consumer<Integer> action) {
         this.listRef = listRef;
@@ -70,7 +72,7 @@ public class TransactionCell extends ListCell<TransactionResource> {
             setGraphic(null);
         } else {
             amountLabel.setText(String.format("%.2f EGP", item.amount));
-            dateLabel.setText(item.date.toString());
+            dateLabel.setText(item.date.format(formatter));
 
             if (item.isIncome) {
                 typeIcon.setText("↓");
