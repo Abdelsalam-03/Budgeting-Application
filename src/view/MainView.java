@@ -10,7 +10,6 @@ import manager.AuthenticationManager;
 public class MainView implements Observer {
 
     private BorderPane root;
-
     private final AuthenticationManager authManager;
 
     public MainView() {
@@ -30,7 +29,6 @@ public class MainView implements Observer {
     }
 
     public VBox getView() {
-
         VBox layout = new VBox();
 
         showAuthView();
@@ -38,17 +36,26 @@ public class MainView implements Observer {
 
         layout.getChildren().add(root);
         return layout;
-
     }
 
     public void showDashboardView() {
-        DashboardView dashboardView = new DashboardView();
-        root.setCenter(dashboardView.getView());
+
+       
+        final DashboardView[] dashboardRef = new DashboardView[1];
+
+        DashboardView dashboard = new DashboardView(() ->
+            root.setCenter(new BudgetingView(() ->
+                root.setCenter(dashboardRef[0].getView())
+            ).getView())
+        );
+
+        dashboardRef[0] = dashboard;
+
+        root.setCenter(dashboard.getView());
     }
 
     public void showAuthView() {
         AuthView authView = new AuthView();
         root.setCenter(authView.getView());
     }
-
 }

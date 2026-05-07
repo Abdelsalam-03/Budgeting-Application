@@ -3,8 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/user/Documents/NetBeansProjects/Budgeting%20Application/src/core/observer/Observer.java</file>
-            <file>file:/C:/Users/user/Documents/NetBeansProjects/Budgeting%20Application/src/budgeting/application/BudgetingApplication.java</file>
+            <file>file:/C:/Users/ali/Documents/NetBeansProjects/Budgeting%20Application/src/model/Budget.java</file>
+            <file>file:/C:/Users/ali/Documents/NetBeansProjects/Budgeting%20Application/src/model/BudgetService.java</file>
+            <file>file:/C:/Users/ali/Documents/NetBeansProjects/Budgeting%20Application/src/view/BudgetingView.java</file>
+            <file>file:/C:/Users/ali/Documents/NetBeansProjects/Budgeting%20Application/src/model/User.java</file>
+            <file>file:/C:/Users/ali/Documents/NetBeansProjects/Budgeting%20Application/src/manager/AuthenticationManager.java</file>
+            <file>file:/C:/Users/ali/Documents/NetBeansProjects/Budgeting%20Application/src/view/MainView.java</file>
+            <file>file:/C:/Users/ali/Documents/NetBeansProjects/Budgeting%20Application/src/model/Transaction.java</file>
+            <file>file:/C:/Users/ali/Documents/NetBeansProjects/Budgeting%20Application/src/manager/BudgetController.java</file>
+            <file>file:/C:/Users/ali/Documents/NetBeansProjects/Budgeting%20Application/src/view/DashboardView.java</file>
+            <file>file:/C:/Users/ali/Documents/NetBeansProjects/Budgeting%20Application/src/view/LoginView.java</file>
+            <file>file:/C:/Users/ali/Documents/NetBeansProjects/Budgeting%20Application/src/budgeting/application/BudgetingApplication.java</file>
         </group>
     </open-files>
 </project-private>
