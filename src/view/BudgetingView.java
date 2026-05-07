@@ -27,7 +27,7 @@ import model.BudgetCategory;
  */
 public class BudgetingView {
 
-    private final BudgetController controller = BudgetController.getInstance();
+    private BudgetController controller;
     private final YearMonth period = YearMonth.now();
     private final Runnable onGoBack;   // callback → back to Dashboard
 
@@ -45,6 +45,7 @@ public class BudgetingView {
 
     public BudgetingView(Runnable onGoBack) {
         this.onGoBack = onGoBack;
+        controller = BudgetController.getInstance();
     }
 
     /**

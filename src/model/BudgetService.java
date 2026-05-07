@@ -17,8 +17,6 @@ public class BudgetService {
 
     private List<Budget> budgets = new ArrayList<>();
     private List<Transaction> transactions = new ArrayList<>();
-    private int nextBudgetId = 1;
-    private int nextTxId = 1;
     private int userId;
 
     private static BudgetService instance;
@@ -27,13 +25,14 @@ public class BudgetService {
         if (instance == null) {
             instance = new BudgetService();
         }
+        instance.userId = AuthenticationManager.getAuthenticationManager().getUser().getID();
+        instance.transactions = Transaction.all(instance.userId);
+        instance.budgets = Budget.all(instance.userId);
         return instance;
     }
 
     private BudgetService() {
-        userId = AuthenticationManager.getAuthenticationManager().getUser().getID();
-        transactions = Transaction.all(userId);
-        budgets = Budget.all(userId);
+        
     }
 
     // ── Create / Edit Budget ──────────────────────────────────────────────────

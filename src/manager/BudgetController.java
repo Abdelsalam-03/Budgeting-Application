@@ -14,14 +14,16 @@ import model.BudgetCategory;
  */
 public class BudgetController {
 
-    private final BudgetService service = BudgetService.getInstance();
+    private BudgetService service;
 
     private static BudgetController instance;
     public static BudgetController getInstance() {
         if (instance == null) instance = new BudgetController();
+        instance.service = BudgetService.getInstance();
         return instance;
     }
-    private BudgetController() {}
+    private BudgetController() {
+    }
 
     // ── US #4 – Create / Edit Budget ─────────────────────────────────────────
 
