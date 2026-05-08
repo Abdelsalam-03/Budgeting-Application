@@ -16,14 +16,14 @@ public class User {
     // Static block to add some dummy data
     static {
         users.add(new User(1, "Ahmed", "ahmed@gmail.com", "1234"));
-        users.add(new User(2, "Ali", "ali@gmail.com", "abcd"));
+        users.add(new User(2, "Ali",   "ali@gmail.com",   "abcd"));
     }
 
     // Full constructor
     private User(int id, String name, String email, String password) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
+        this.id       = id;
+        this.name     = name;
+        this.email    = email;
         this.password = password;
     }
 
@@ -31,9 +31,9 @@ public class User {
     public User(int id) {
         for (User user : users) {
             if (user.id == id) {
-                this.id = user.id;
-                this.name = user.name;
-                this.email = user.email;
+                this.id       = user.id;
+                this.name     = user.name;
+                this.email    = user.email;
                 this.password = user.password;
                 return;
             }
@@ -45,9 +45,9 @@ public class User {
     public User(String email) {
         for (User user : users) {
             if (user.email.equals(email)) {
-                this.id = user.id;
-                this.name = user.name;
-                this.email = user.email;
+                this.id       = user.id;
+                this.name     = user.name;
+                this.email    = user.email;
                 this.password = user.password;
                 return;
             }
@@ -77,5 +77,27 @@ public class User {
     // Optional: get all users
     public static List<User> all() {
         return users;
+    }
+
+    // Update name
+    public void updateName(String newName) {
+        for (User user : users) {
+            if (user.id == this.id) {
+                user.name = newName;
+                this.name = newName;
+                return;
+            }
+        }
+    }
+
+    // Update password
+    public void updatePassword(String newPassword) {
+        for (User user : users) {
+            if (user.id == this.id) {
+                user.password = newPassword;
+                this.password = newPassword;
+                return;
+            }
+        }
     }
 }

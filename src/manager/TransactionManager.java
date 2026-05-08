@@ -14,7 +14,11 @@ public class TransactionManager {
         try {
             int userId = AuthenticationManager.getAuthenticationManager().getUser().getID();
             Transaction transaction = Transaction.create(amount, userId, categoryId, date, notes, isIncome);
-//            return new TransactionResource(transaction);
+
+            // Auto-update matching budget goals by category
+            BudgetGoalManager budgetGoalManager = new BudgetGoalManager();
+            budgetGoalManager.updateGoalsForTransaction(userId, categoryId, amount);
+
         } catch (Exception e) {
             throw e;
         }
@@ -29,7 +33,7 @@ public class TransactionManager {
             throw e;
         }
     }
-    
+
     public boolean deleteTransaction(int transactionID) {
         try {
             Transaction transaction = new Transaction(transactionID);

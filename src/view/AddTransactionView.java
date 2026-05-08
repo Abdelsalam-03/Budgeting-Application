@@ -48,10 +48,12 @@ public class AddTransactionView {
         TextField amountField = new TextField();
         amountField.setPromptText("Enter amount");
 
+        // Same categories used in budget goals — always visible
         ComboBox<String> categoryDropdown = new ComboBox<>();
         categoryDropdown.getItems().addAll(
-                "Food", "Transport", "Shopping"
+                "Savings / General", "Food", "Transport", "Entertainment", "Utilities", "Shopping"
         );
+        categoryDropdown.getSelectionModel().selectFirst();
 
         DatePicker datePicker = new DatePicker(LocalDate.now());
 
@@ -61,24 +63,6 @@ public class AddTransactionView {
         TextArea notesArea = new TextArea();
         notesArea.setPromptText("Optional notes...");
         notesArea.setPrefRowCount(3);
-
-        // Layout containers
-        VBox categoryBox = new VBox(5,
-                new Label("Category"),
-                categoryDropdown
-        );
-
-        // Initially hidden (because default is Income)
-        categoryBox.setVisible(false);
-        categoryBox.setManaged(false);
-
-        // Toggle behavior
-        typeGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
-            boolean isExpense = newVal == expenseToggle;
-
-            categoryBox.setVisible(isExpense);
-            categoryBox.setManaged(isExpense);
-        });
 
         // Now checkbox behavior
         nowCheck.selectedProperty().addListener((obs, oldVal, isNow) -> {
@@ -98,18 +82,21 @@ public class AddTransactionView {
         createBtn.setOnAction(e -> {
             boolean isIncome = incomeToggle.isSelected();
 
-            double amount = Double.parseDouble(amountField.getText());
-            String category = isIncome ? "0" : categoryDropdown.getValue();
-            Date date = Date.from(
-                    datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()
-            );
-            String notes = notesArea.getText();
-
-            TransactionManager tmg = new TransactionManager();
             try {
-                tmg.addTransaction(amount, 0, new Date(), notes, isIncome);
+                double amount = Double.parseDouble(amountField.getText());
+                int categoryId = categoryDropdown.getSelectionModel().getSelectedIndex();
+                Date date = Date.from(
+                        datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()
+                );
+                String notes = notesArea.getText();
+
+                TransactionManager tmg = new TransactionManager();
+                tmg.addTransaction(amount, categoryId, date, notes, isIncome);
+
                 amountField.setText("");
                 notesArea.setText("");
+                categoryDropdown.getSelectionModel().selectFirst();
+
             } catch (Exception ee) {
             }
         });
@@ -118,7 +105,7 @@ public class AddTransactionView {
         VBox form = new VBox(15,
                 toggleBox,
                 labeledField("Amount", amountField),
-                categoryBox,
+                labeledField("Category", categoryDropdown),
                 labeledField("Date", new HBox(10, datePicker, nowCheck)),
                 labeledField("Notes", notesArea),
                 createBtn

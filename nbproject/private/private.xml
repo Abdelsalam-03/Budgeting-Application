@@ -10,11 +10,15 @@
             <file>file:/C:/Users/monee/OneDrive/Documents/NetBeansProjects/Budgeting-Application/src/model/User.java</file>
             <file>file:/C:/Users/monee/OneDrive/Documents/NetBeansProjects/Budgeting-Application/src/resource/UserResource.java</file>
             <file>file:/C:/Users/monee/OneDrive/Documents/NetBeansProjects/Budgeting-Application/src/model/BudgetGoal.java</file>
-            <file>file:/C:/Users/monee/OneDrive/Documents/NetBeansProjects/Budgeting-Application/src/resource/BudgetGoalResource.java</file>
             <file>file:/C:/Users/monee/OneDrive/Documents/NetBeansProjects/Budgeting-Application/src/manager/BudgetGoalManager.java</file>
+            <file>file:/C:/Users/monee/OneDrive/Documents/NetBeansProjects/Budgeting-Application/src/manager/AuthenticationManager.java</file>
+            <file>file:/C:/Users/monee/OneDrive/Documents/NetBeansProjects/Budgeting-Application/src/manager/TransactionManager.java</file>
             <file>file:/C:/Users/monee/OneDrive/Documents/NetBeansProjects/Budgeting-Application/src/view/AddBudgetGoalView.java</file>
             <file>file:/C:/Users/monee/OneDrive/Documents/NetBeansProjects/Budgeting-Application/src/view/component/BudgetGoalCell.java</file>
             <file>file:/C:/Users/monee/OneDrive/Documents/NetBeansProjects/Budgeting-Application/src/view/component/ViewBudgetGoalDialog.java</file>
+            <file>file:/C:/Users/monee/OneDrive/Documents/NetBeansProjects/Budgeting-Application/src/resource/BudgetGoalResource.java</file>
+            <file>file:/C:/Users/monee/OneDrive/Documents/NetBeansProjects/Budgeting-Application/src/view/MainView.java</file>
+            <file>file:/C:/Users/monee/OneDrive/Documents/NetBeansProjects/Budgeting-Application/src/manager/ProfileManager.java</file>
         </group>
     </open-files>
 </project-private>
