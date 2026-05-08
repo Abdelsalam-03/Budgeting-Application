@@ -13,33 +13,27 @@ import javafx.scene.layout.*;
 
 import resource.BudgetGoalResource;
 
-
 public class BudgetGoalCell extends ListCell<BudgetGoalResource> {
 
-    private final Consumer<Integer>                 deleteAction;
-    private final ObservableList<BudgetGoalResource> listRef;
+    private Consumer<Integer> deleteAction;
 
-    
-    private final HBox      root        = new HBox(12);
-    private final Label     statusIcon  = new Label();  
-    private final Label     nameLabel   = new Label();
-    private final Label     amountLabel = new Label();
-    private final ProgressBar progressBar = new ProgressBar(0);
-    private final Label     percentLabel = new Label();
-    private final Button    deleteBtn   = new Button("Delete");
+    private ObservableList<BudgetGoalResource> listRef;
 
-    public BudgetGoalCell(ObservableList<BudgetGoalResource> listRef,
-                          Consumer<Integer> deleteAction) {
+    // Cell nodes
+    private HBox root = new HBox(12);
+    private Label statusIcon  = new Label();
+    private Label nameLabel   = new Label();
+    private Label amountLabel = new Label();
+    private ProgressBar progressBar = new ProgressBar(0);
+    private Label percentLabel = new Label();
+    private Button viewBtn   = new Button("View");
+    private Button editBtn   = new Button("Edit");
+    private Button deleteBtn = new Button("Delete");
+
+    public BudgetGoalCell(ObservableList<BudgetGoalResource> listRef, Consumer<Integer> deleteAction) {
         this.listRef      = listRef;
         this.deleteAction = deleteAction;
 
-        buildLayout();
-        wireHandlers();
-    }
-
-    
-
-    private void buildLayout() {
         root.setAlignment(Pos.CENTER_LEFT);
         root.setPadding(new Insets(10));
 
@@ -51,39 +45,43 @@ public class BudgetGoalCell extends ListCell<BudgetGoalResource> {
         percentLabel.setStyle("-fx-font-size: 11; -fx-text-fill: #555;");
 
         VBox infoBox = new VBox(4, nameLabel, amountLabel,
-                                new HBox(8, progressBar, percentLabel));
+                new HBox(8, progressBar, percentLabel));
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        root.getChildren().addAll(statusIcon, infoBox, spacer, deleteBtn);
-    }
+        HBox buttons = new HBox(6, viewBtn, editBtn, deleteBtn);
+        buttons.setAlignment(Pos.CENTER_RIGHT);
 
-    
+        root.getChildren().addAll(statusIcon, infoBox, spacer, buttons);
 
-    private void wireHandlers() {
-        
-        root.setOnMouseClicked(e -> {
-            BudgetGoalResource item = getItem();
-            if (item != null) {
-                ViewBudgetGoalDialog.show(item);
+        // View button → open detail dialog
+        viewBtn.setOnAction(e -> {
+            if (getItem() != null) {
+                ViewBudgetGoalDialog.show(getItem());
             }
         });
 
-        
+        // Edit button → open edit dialog
+        editBtn.setOnAction(e -> {
+            if (getItem() != null) {
+                EditBudgetGoalDialog.show(getItem(), listRef);
+            }
+        });
+
+        // Delete button
         deleteBtn.setOnAction(e -> {
-            BudgetGoalResource item = getItem();
-            if (item == null) return;
             try {
-                deleteAction.accept(item.id);
-                listRef.remove(item);
-            } catch (Exception ex) {
-                System.out.println("Delete failed: " + ex.getMessage());
+                deleteAction.accept(getItem().id);
+                BudgetGoalResource item = getItem();
+                if (item != null) {
+                    listRef.remove(item);
+                }
+            } catch (Exception exception) {
+                System.out.println("Exception occurred");
             }
         });
     }
-
-    
 
     @Override
     protected void updateItem(BudgetGoalResource item, boolean empty) {
@@ -91,27 +89,25 @@ public class BudgetGoalCell extends ListCell<BudgetGoalResource> {
 
         if (empty || item == null) {
             setGraphic(null);
-            return;
-        }
-
-        nameLabel.setText(item.name);
-        amountLabel.setText(String.format("%.2f / %.2f EGP",
-                item.currentAmount, item.targetAmount));
-
-        double ratio = item.progressRatio();
-        progressBar.setProgress(ratio);
-        percentLabel.setText(String.format("%.0f%%", ratio * 100));
-
-        if (item.isCompleted) {
-            statusIcon.setText("✓");
-            statusIcon.setStyle("-fx-text-fill: #4CAF50; -fx-font-size: 18; -fx-font-weight: bold;");
-            progressBar.setStyle("-fx-accent: #4CAF50;");
         } else {
-            statusIcon.setText("◎");
-            statusIcon.setStyle("-fx-text-fill: #3F51B5; -fx-font-size: 18;");
-            progressBar.setStyle("-fx-accent: #3F51B5;");
-        }
+            nameLabel.setText(item.name);
+            amountLabel.setText(String.format("%.2f / %.2f EGP", item.currentAmount, item.targetAmount));
 
-        setGraphic(root);
+            double ratio = item.progressRatio();
+            progressBar.setProgress(ratio);
+            percentLabel.setText(String.format("%.0f%%", ratio * 100));
+
+            if (item.isCompleted) {
+                statusIcon.setText("✓");
+                statusIcon.setStyle("-fx-text-fill: #4CAF50; -fx-font-size: 18; -fx-font-weight: bold;");
+                progressBar.setStyle("-fx-accent: #4CAF50;");
+            } else {
+                statusIcon.setText("◎");
+                statusIcon.setStyle("-fx-text-fill: #3F51B5; -fx-font-size: 18;");
+                progressBar.setStyle("-fx-accent: #3F51B5;");
+            }
+
+            setGraphic(root);
+        }
     }
 }
