@@ -1,9 +1,8 @@
 package manager;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDateTime;
-
 import model.Transaction;
 import resource.TransactionResource;
 
@@ -14,7 +13,13 @@ public class TransactionManager {
         try {
             int userId = AuthenticationManager.getAuthenticationManager().getUser().getID();
             Transaction.create(amount, userId, categoryId, date, notes, isIncome);
-//            return new TransactionResource(transaction);
+
+            // Auto-update matching budget goals by category
+            if (isIncome) {
+                BudgetGoalManager budgetGoalManager = new BudgetGoalManager();
+                budgetGoalManager.updateGoalsForTransaction(userId, 1, amount);
+            }
+
         } catch (Exception e) {
             throw e;
         }
@@ -29,7 +34,7 @@ public class TransactionManager {
             throw e;
         }
     }
-    
+
     public boolean deleteTransaction(int transactionID) {
         try {
             Transaction transaction = new Transaction(transactionID);

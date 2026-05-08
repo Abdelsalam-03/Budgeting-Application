@@ -36,15 +36,17 @@ public class DashboardView {
                 + "-fx-text-fill: white;"
                 + "-fx-background-radius: 6;"
                 + "-fx-font-weight: bold;";
-        ToggleButton homeBtn = new ToggleButton("home");
+        ToggleButton homeBtn = new ToggleButton("Home");
         ToggleButton transactionsBtn = new ToggleButton("Transactions");
         ToggleButton budgetGoalsBtn  = new ToggleButton("Budget Goals");
+        ToggleButton profileBtn      = new ToggleButton("Profile");
         ToggleButton logOutBtn       = new ToggleButton("Logout");
 
         ToggleGroup group = new ToggleGroup();
         homeBtn.setToggleGroup(group);
         transactionsBtn.setToggleGroup(group);
         budgetGoalsBtn.setToggleGroup(group);
+        profileBtn.setToggleGroup(group);
         logOutBtn.setToggleGroup(group);
 
         // Default selected
@@ -54,7 +56,9 @@ public class DashboardView {
         homeBtn.setOnAction(e -> showHomeView());
         transactionsBtn.setOnAction(e -> showTransactionsView());
         budgetGoalsBtn.setOnAction(e -> showBudgetGoalsView());
+        profileBtn.setOnAction(e -> showProfileView());
         logOutBtn.setOnAction(e -> authManager.logout());
+
         logOutBtn.setStyle(
                 "-fx-background-color: #E53935;"
                 + "-fx-text-fill: white;"
@@ -65,8 +69,9 @@ public class DashboardView {
         homeBtn.setStyle(btnStyle);
         budgetGoalsBtn.setStyle(btnStyle);
         transactionsBtn.setStyle(btnStyle);
+        profileBtn.setStyle(btnStyle);
 
-        HBox header = new HBox(10, homeBtn, transactionsBtn, budgetGoalsBtn, logOutBtn);
+        HBox header = new HBox(10, homeBtn, transactionsBtn, budgetGoalsBtn, profileBtn, logOutBtn);
         header.setStyle("-fx-padding: 10; -fx-background-color: " + CARD + ";");
         return header;
     }
@@ -94,6 +99,11 @@ public class DashboardView {
 
     public void showBudgetGoalsView() {
         BudgetGoalView view = new BudgetGoalView();
+        root.setCenter(view.getView());
+    }
+
+    public void showProfileView() {
+        ProfileView view = new ProfileView();
         root.setCenter(view.getView());
     }
 }

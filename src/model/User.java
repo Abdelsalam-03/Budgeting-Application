@@ -17,9 +17,9 @@ public class User extends Model {
 
     // Existing user Full constructor
     private User(int id, String name, String email, String password) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
+        this.id       = id;
+        this.name     = name;
+        this.email    = email;
         this.password = password;
     }
 
@@ -95,8 +95,33 @@ public class User extends Model {
 
     }
 
-    // Optional: get all users
-//    public static List<User> all() {
-//        return users;
-//    }
+    // Update method
+    public void save() {
+        try {
+            String[] cols = {"name", "password"};
+            Object[] values = {name, password};
+
+            String[] whereCols = {"id"};
+            Object[] whereVals = {id};
+
+            new Budget().update(cols, values, whereCols, whereVals);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("An error occurred");
+        }
+    }
+
+
+    // Update name
+    public void updateName(String newName) {
+        this.name = newName;
+        this.save();
+    }
+
+    // Update password
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
+        this.save();
+    }
 }
