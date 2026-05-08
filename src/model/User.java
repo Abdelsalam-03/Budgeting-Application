@@ -104,7 +104,7 @@ public class User extends Model {
             String[] whereCols = {"id"};
             Object[] whereVals = {id};
 
-            new Budget().update(cols, values, whereCols, whereVals);
+            new User().update(cols, values, whereCols, whereVals);
 
         } catch (SQLException e) {
             e.printStackTrace();
