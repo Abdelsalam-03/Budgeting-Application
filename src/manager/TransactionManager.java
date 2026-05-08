@@ -1,23 +1,24 @@
 package manager;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
-
 import model.Transaction;
 import resource.TransactionResource;
 
 public class TransactionManager {
 
-    public boolean addTransaction(double amount, int categoryId, Date date, String notes, boolean isIncome) {
+    public boolean addTransaction(double amount, Integer categoryId, LocalDateTime date, String notes, boolean isIncome) {
 
         try {
             int userId = AuthenticationManager.getAuthenticationManager().getUser().getID();
-            Transaction transaction = Transaction.create(amount, userId, categoryId, date, notes, isIncome);
+            Transaction.create(amount, userId, categoryId, date, notes, isIncome);
 
             // Auto-update matching budget goals by category
-            BudgetGoalManager budgetGoalManager = new BudgetGoalManager();
-            budgetGoalManager.updateGoalsForTransaction(userId, categoryId, amount);
+            if (isIncome) {
+                BudgetGoalManager budgetGoalManager = new BudgetGoalManager();
+                budgetGoalManager.updateGoalsForTransaction(userId, 1, amount);
+            }
 
         } catch (Exception e) {
             throw e;

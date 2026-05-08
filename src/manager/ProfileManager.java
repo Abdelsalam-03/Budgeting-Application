@@ -19,7 +19,7 @@ public class ProfileManager {
 
     // Update name
     public void updateName(String newName) {
-        if (newName == null || newName.isBlank())
+        if (newName == null || newName.isEmpty())
             throw new RuntimeException("Name must not be empty");
 
         int userId = authManager.getUser().getID();
@@ -29,7 +29,7 @@ public class ProfileManager {
 
     // Change password
     public void changePassword(String currentPassword, String newPassword) {
-        if (newPassword == null || newPassword.isBlank())
+        if (newPassword == null || newPassword.isEmpty())
             throw new RuntimeException("New password must not be empty");
 
         int userId = authManager.getUser().getID();

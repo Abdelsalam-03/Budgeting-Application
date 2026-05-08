@@ -9,11 +9,12 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
-import java.time.LocalDate;
-import java.util.Date;
-import java.time.ZoneId;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import manager.BudgetController;
 
 import manager.TransactionManager;
+import model.BudgetCategory;
 
 public class AddTransactionView {
 
@@ -48,14 +49,12 @@ public class AddTransactionView {
         TextField amountField = new TextField();
         amountField.setPromptText("Enter amount");
 
-        // Same categories used in budget goals — always visible
-        ComboBox<String> categoryDropdown = new ComboBox<>();
-        categoryDropdown.getItems().addAll(
-                "Savings / General", "Food", "Transport", "Entertainment", "Utilities", "Shopping"
-        );
-        categoryDropdown.getSelectionModel().selectFirst();
+                ComboBox<BudgetCategory> categoryDropdown = new ComboBox<>();
+                BudgetController controller = BudgetController.getInstance();
+        categoryDropdown.getItems().addAll(controller.getCategories());
+        categoryDropdown.setPromptText("Select a category");
 
-        DatePicker datePicker = new DatePicker(LocalDate.now());
+        DatePicker datePicker = new DatePicker(LocalDateTime.now().toLocalDate());
 
         CheckBox nowCheck = new CheckBox("Now");
         nowCheck.setSelected(true);
@@ -64,10 +63,28 @@ public class AddTransactionView {
         notesArea.setPromptText("Optional notes...");
         notesArea.setPrefRowCount(3);
 
+        // Layout containers
+        VBox categoryBox = new VBox(5,
+                new Label("Category"),
+                categoryDropdown
+        );
+
+        // Initially hidden (because default is Income)
+        categoryBox.setVisible(false);
+        categoryBox.setManaged(false);
+
+        // Toggle behavior
+        typeGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+            boolean isExpense = newVal == expenseToggle;
+
+            categoryBox.setVisible(isExpense);
+            categoryBox.setManaged(isExpense);
+        });
+
         // Now checkbox behavior
         nowCheck.selectedProperty().addListener((obs, oldVal, isNow) -> {
             if (isNow) {
-                datePicker.setValue(LocalDate.now());
+                datePicker.setValue(LocalDateTime.now().toLocalDate());
                 datePicker.setDisable(true);
             } else {
                 datePicker.setDisable(false);
@@ -82,22 +99,18 @@ public class AddTransactionView {
         createBtn.setOnAction(e -> {
             boolean isIncome = incomeToggle.isSelected();
 
+            double amount = Double.parseDouble(amountField.getText());
+            Integer category = isIncome ? null : categoryDropdown.getValue().id;
+            LocalDateTime date = LocalDateTime.of(datePicker.getValue(), LocalTime.of(0, 0, 0, 0));
+            String notes = notesArea.getText();
+                        
+            TransactionManager tmg = new TransactionManager();
             try {
-                double amount = Double.parseDouble(amountField.getText());
-                int categoryId = categoryDropdown.getSelectionModel().getSelectedIndex();
-                Date date = Date.from(
-                        datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()
-                );
-                String notes = notesArea.getText();
-
-                TransactionManager tmg = new TransactionManager();
-                tmg.addTransaction(amount, categoryId, date, notes, isIncome);
-
+                tmg.addTransaction(amount, category, date, notes, isIncome);
                 amountField.setText("");
                 notesArea.setText("");
-                categoryDropdown.getSelectionModel().selectFirst();
-
             } catch (Exception ee) {
+                ee.printStackTrace();
             }
         });
 
@@ -105,7 +118,7 @@ public class AddTransactionView {
         VBox form = new VBox(15,
                 toggleBox,
                 labeledField("Amount", amountField),
-                labeledField("Category", categoryDropdown),
+                categoryBox,
                 labeledField("Date", new HBox(10, datePicker, nowCheck)),
                 labeledField("Notes", notesArea),
                 createBtn

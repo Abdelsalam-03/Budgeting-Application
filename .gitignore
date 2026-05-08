@@ -11,7 +11,3 @@
 # Keep source code
 !/src/
 !/src/**
-
-# Keep NetBeans project configuration
-!/nbproject/
-!/nbproject/**
