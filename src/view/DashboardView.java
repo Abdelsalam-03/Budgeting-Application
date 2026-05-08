@@ -63,9 +63,10 @@ public class DashboardView {
         );
         
         homeBtn.setStyle(btnStyle);
+        budgetGoalsBtn.setStyle(btnStyle);
         transactionsBtn.setStyle(btnStyle);
 
-        HBox header = new HBox(10, homeBtn, transactionsBtn, logOutBtn);
+        HBox header = new HBox(10, homeBtn, transactionsBtn, budgetGoalsBtn, logOutBtn);
         header.setStyle("-fx-padding: 10; -fx-background-color: " + CARD + ";");
         return header;
     }
@@ -92,7 +93,7 @@ public class DashboardView {
     }
 
     public void showBudgetGoalsView() {
-        AddBudgetGoalView view = new AddBudgetGoalView();
+        BudgetGoalView view = new BudgetGoalView();
         root.setCenter(view.getView());
     }
 }

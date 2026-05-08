@@ -70,7 +70,7 @@ public class BudgetGoal {
                                     double targetAmount, int categoryId, Date deadline) {
         int newId = goals.size() + 1;
 
-        if (name == null || name.isBlank())
+        if (name == null || name.isEmpty())
             throw new RuntimeException("Goal name must not be empty");
         if (targetAmount <= 0)
             throw new RuntimeException("Target amount must be positive");
@@ -91,7 +91,7 @@ public class BudgetGoal {
 
     // Edit goal fields
     public void edit(String newName, double newTargetAmount, int newCategoryId, Date newDeadline) {
-        if (newName == null || newName.isBlank())
+        if (newName == null || newName.isEmpty())
             throw new RuntimeException("Goal name must not be empty");
         if (newTargetAmount <= 0)
             throw new RuntimeException("Target amount must be positive");
