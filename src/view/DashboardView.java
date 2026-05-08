@@ -11,6 +11,8 @@ import manager.AuthenticationManager;
 
 public class DashboardView {
 
+    private static final String CARD = "#252840";
+    private static final String SUB = "#A0A3B1";
     private final BorderPane root;
     private final AuthenticationManager authManager;
 
@@ -34,6 +36,10 @@ public class DashboardView {
     }
 
     private HBox createHeader() {
+        String btnStyle = "-fx-background-color: "+ SUB +";"
+                + "-fx-text-fill: white;"
+                + "-fx-background-radius: 6;"
+                + "-fx-font-weight: bold;";
         ToggleButton homeBtn = new ToggleButton("home");
         ToggleButton transactionsBtn = new ToggleButton("Transactions");
         ToggleButton logOutBtn = new ToggleButton("Logout");
@@ -56,20 +62,22 @@ public class DashboardView {
                 + "-fx-background-radius: 6;"
                 + "-fx-font-weight: bold;"
         );
+        
+        homeBtn.setStyle(btnStyle);
+        transactionsBtn.setStyle(btnStyle);
 
         HBox header = new HBox(10, homeBtn, transactionsBtn, logOutBtn);
-        header.setStyle("-fx-padding: 10; -fx-background-color: white;");
-
+        header.setStyle("-fx-padding: 10; -fx-background-color: " + CARD + ";");
         return header;
     }
 
     public void showHomeView() {
         final HomeView[] dashboardRef = new HomeView[1];
 
-        HomeView dashboard = new HomeView(() ->
-            root.setCenter(new BudgetingView(() ->
-                root.setCenter(dashboardRef[0].getView())
-            ).getView())
+        HomeView dashboard = new HomeView(()
+                -> root.setCenter(new BudgetingView(()
+                        -> root.setCenter(dashboardRef[0].getView())
+                ).getView())
         );
 
         dashboardRef[0] = dashboard;
@@ -78,7 +86,7 @@ public class DashboardView {
 
 //        root.setCenter(layout);
     }
-    
+
     public void showTransactionsView() {
         TransactionsView view = new TransactionsView();
         root.setCenter(view.getView());

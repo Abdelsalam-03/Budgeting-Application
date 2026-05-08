@@ -54,7 +54,7 @@ public class TransactionsView {
         addTransactionBtn.setOnAction(e -> showAddTransactionView());
 
         VBox sideBar = new VBox(10, transactionsBtn, addTransactionBtn);
-        sideBar.setStyle("-fx-padding: 10; -fx-background-color: gray;");
+        sideBar.setStyle("-fx-padding: 10; -fx-background-color: white;");
 
         return sideBar;
     }
