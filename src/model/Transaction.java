@@ -1,46 +1,26 @@
 package model;
 
+import core.database.Model;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
 
-public class Transaction {
+public class Transaction extends Model {
 
     public int id;
     public double amount;
     public int userId;
     public int categoryId;
     public String notes;
-    public Date date;
+    public LocalDateTime date;
     public boolean isIncome;
-
-    // Fake database
-    private static List<Transaction> transactions = new ArrayList<>();
-
-    // Static block to add some dummy data
-    static {
-        transactions.add(new Transaction(1, 150.0, 1, 1, "Lunch at restaurant", new Date(), false));
-        transactions.add(new Transaction(2, 50.0, 1, 2, "Uber ride", new Date(), false));
-        transactions.add(new Transaction(3, 300.0, 2, 4, "Electricity bill", new Date(), false));
-        transactions.add(new Transaction(4, 120.0, 2, 3, "Cinema tickets", new Date(), false));
-        transactions.add(new Transaction(5, 500.0, 1, 5, "Clothes shopping", new Date(), false));
-
-        transactions.add(new Transaction(6, 2000.0, 1, 0, "Salary", new Date(), true));
-        transactions.add(new Transaction(7, 1500.0, 2, 0, "Freelance project", new Date(), true));
-        transactions.add(new Transaction(8, 250.0, 1, 0, "Sold old items", new Date(), true));
-
-        transactions.add(new Transaction(9, 80.0, 2, 1, "Groceries", new Date(), false));
-        transactions.add(new Transaction(10, 40.0, 1, 2, "Bus ticket", new Date(), false));
-        transactions.add(new Transaction(11, 220.0, 2, 5, "New shoes", new Date(), false));
-        transactions.add(new Transaction(12, 600.0, 1, 4, "Internet bill", new Date(), false));
-
-        transactions.add(new Transaction(13, 3000.0, 2, 0, "Monthly salary", new Date(), true));
-        transactions.add(new Transaction(14, 100.0, 1, 3, "Game purchase", new Date(), false));
-        transactions.add(new Transaction(15, 75.0, 2, 1, "Dinner", new Date(), false));
-    }
+    private String category = null;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 
     // Full constructor
-    private Transaction(int id, double amount, int userId, int categoryId, String notes, Date date, boolean isIncome) {
+    private Transaction(int id, double amount, int userId, int categoryId, String notes, LocalDateTime date, boolean isIncome) {
         this.id = id;
         this.amount = amount;
         this.userId = userId;
@@ -52,44 +32,91 @@ public class Transaction {
 
     // Search by ID
     public Transaction(int id) {
-        for (Transaction transaction : transactions) {
-            if (transaction.id == id) {
-                this.id = transaction.id;
-                return;
-            }
+        try {
+            Transaction result = this.get(
+                    new String[]{"id"},
+                    new Object[]{id},
+                    rs -> new Transaction(
+                            rs.getInt("id"),
+                            rs.getDouble("amount"),
+                            rs.getInt("user_id"),
+                            rs.getInt("budgeting_category_id"),
+                            rs.getString("notes"),
+                            LocalDateTime.parse(rs.getString("transaction_date"), formatter),
+                            rs.getBoolean("is_income")
+                    )
+            );
+            this.id = result.id;
+            this.amount = result.amount;
+            this.userId = result.userId;
+            this.categoryId = result.categoryId;
+            this.notes = result.notes;
+            this.date = result.date;
+            this.isIncome = result.isIncome;
+        } catch (SQLException e) {
+            // Handle the exception
+            throw new RuntimeException("Transaction not found with id: " + id);
         }
-        throw new RuntimeException("Transaction not found with id: " + id);
     }
 
     // Empty constructor
     public Transaction() {
     }
 
+    @Override
+    protected String getTable() {
+        return "transactions";
+    }
+
     // Creation method
-    public static Transaction create(double amount, int userId, int categoryId, Date date, String notes, boolean isIncome) {
-        int newId = transactions.size() + 1;
-
-        if (amount <= 0) {
-            throw new RuntimeException("Transaction amount is not valid");
+    public static void create(double amount, int userId, Integer categoryId, LocalDateTime date, String notes, boolean isIncome) {
+        try {
+            String[] cols = {"amount", "user_id", "budgeting_category_id", "transaction_date", "notes", "is_income"};
+            Object[] values = {amount, userId, categoryId, date, notes, isIncome};
+            new Transaction().insert(cols, values);
+        } catch (SQLException e) {
+            // Handle different exceptions
+            throw new RuntimeException("An error occurred");
         }
-
-        Transaction newTransaction = new Transaction(newId, amount, userId, categoryId, notes, date, isIncome);
-        transactions.add(newTransaction);
-        return newTransaction;
     }
 
     // Optional: get all user transactions
     public static List<Transaction> all(int userId) {
-        List<Transaction> newList = new ArrayList<>();
-        transactions.forEach(tr -> {
-            if (tr.userId == userId) {
-                newList.add(tr);
-            }
-        });
-        return newList;
+        try {
+            return new Transaction().getAll(
+                    new String[]{"user_id"},
+                    new Object[]{userId},
+                    rs
+                    -> new Transaction(
+                            rs.getInt("id"),
+                            rs.getDouble("amount"),
+                            rs.getInt("user_id"),
+                            rs.getInt("budgeting_category_id"),
+                            rs.getString("notes"),
+                            LocalDateTime.parse(rs.getString("transaction_date"), formatter),
+                            rs.getBoolean("is_income")));
+        } catch (SQLException e) {
+            throw new RuntimeException("An error occurred");
+        }
     }
-    
+
     public void delete() {
-        transactions.removeIf(t -> t.id == this.id);
+        try {
+            this.destroy(new String[]{"id"}, new Object[]{this.id});
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Exception Occurred");
+        }
+    }
+
+    public String getCategory(){
+        if (!isIncome || category == null) {
+            BudgetCategory budgetCategory = new BudgetCategory(categoryId);
+            category = budgetCategory.name;
+        }
+        if (isIncome) {
+            category = "";
+        }
+        return category;
     }
 }

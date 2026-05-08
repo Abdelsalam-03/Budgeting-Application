@@ -9,11 +9,12 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
-import java.time.LocalDate;
-import java.util.Date;
-import java.time.ZoneId;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import manager.BudgetController;
 
 import manager.TransactionManager;
+import model.BudgetCategory;
 
 public class AddTransactionView {
 
@@ -48,12 +49,12 @@ public class AddTransactionView {
         TextField amountField = new TextField();
         amountField.setPromptText("Enter amount");
 
-        ComboBox<String> categoryDropdown = new ComboBox<>();
-        categoryDropdown.getItems().addAll(
-                "Food", "Transport", "Shopping"
-        );
+                ComboBox<BudgetCategory> categoryDropdown = new ComboBox<>();
+                BudgetController controller = BudgetController.getInstance();
+        categoryDropdown.getItems().addAll(controller.getCategories());
+        categoryDropdown.setPromptText("Select a category");
 
-        DatePicker datePicker = new DatePicker(LocalDate.now());
+        DatePicker datePicker = new DatePicker(LocalDateTime.now().toLocalDate());
 
         CheckBox nowCheck = new CheckBox("Now");
         nowCheck.setSelected(true);
@@ -83,7 +84,7 @@ public class AddTransactionView {
         // Now checkbox behavior
         nowCheck.selectedProperty().addListener((obs, oldVal, isNow) -> {
             if (isNow) {
-                datePicker.setValue(LocalDate.now());
+                datePicker.setValue(LocalDateTime.now().toLocalDate());
                 datePicker.setDisable(true);
             } else {
                 datePicker.setDisable(false);
@@ -99,18 +100,17 @@ public class AddTransactionView {
             boolean isIncome = incomeToggle.isSelected();
 
             double amount = Double.parseDouble(amountField.getText());
-            String category = isIncome ? "0" : categoryDropdown.getValue();
-            Date date = Date.from(
-                    datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()
-            );
+            Integer category = isIncome ? null : categoryDropdown.getValue().id;
+            LocalDateTime date = LocalDateTime.of(datePicker.getValue(), LocalTime.of(0, 0, 0, 0));
             String notes = notesArea.getText();
-
+                        
             TransactionManager tmg = new TransactionManager();
             try {
-                tmg.addTransaction(amount, 0, new Date(), notes, isIncome);
+                tmg.addTransaction(amount, category, date, notes, isIncome);
                 amountField.setText("");
                 notesArea.setText("");
             } catch (Exception ee) {
+                ee.printStackTrace();
             }
         });
 

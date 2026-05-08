@@ -2,18 +2,18 @@ package manager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import model.Transaction;
 import resource.TransactionResource;
 
 public class TransactionManager {
 
-    public boolean addTransaction(double amount, int categoryId, Date date, String notes, boolean isIncome) {
+    public boolean addTransaction(double amount, Integer categoryId, LocalDateTime date, String notes, boolean isIncome) {
 
         try {
             int userId = AuthenticationManager.getAuthenticationManager().getUser().getID();
-            Transaction transaction = Transaction.create(amount, userId, categoryId, date, notes, isIncome);
+            Transaction.create(amount, userId, categoryId, date, notes, isIncome);
 //            return new TransactionResource(transaction);
         } catch (Exception e) {
             throw e;
