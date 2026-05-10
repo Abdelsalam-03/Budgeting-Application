@@ -114,55 +114,47 @@ public class DashboardView {
      */
     private HBox createHeader() {
 
-        String btnStyle = "-fx-background-color: " + SUB + ";"
+        String btnStyle = "-fx-background-color: "+ SUB +";"
                 + "-fx-text-fill: white;"
                 + "-fx-background-radius: 6;"
                 + "-fx-font-weight: bold;";
-
-        ToggleButton homeBtn = new ToggleButton("home");
+        ToggleButton homeBtn = new ToggleButton("Home");
         ToggleButton transactionsBtn = new ToggleButton("Transactions");
-        ToggleButton budgetGoalsBtn = new ToggleButton("Budget Goals");
-        ToggleButton logOutBtn = new ToggleButton("Logout");
+        ToggleButton budgetGoalsBtn  = new ToggleButton("Budget Goals");
+        ToggleButton profileBtn      = new ToggleButton("Profile");
+        ToggleButton logOutBtn       = new ToggleButton("Logout");
 
-        // Ensures only one navigation button can be selected at a time
         ToggleGroup group = new ToggleGroup();
-
         homeBtn.setToggleGroup(group);
         transactionsBtn.setToggleGroup(group);
         budgetGoalsBtn.setToggleGroup(group);
+        profileBtn.setToggleGroup(group);
         logOutBtn.setToggleGroup(group);
 
-        // Set Home button as the default selected option
+        // Default selected
         homeBtn.setSelected(true);
 
-        // Navigation button actions
+        // Actions
         homeBtn.setOnAction(e -> showHomeView());
-
         transactionsBtn.setOnAction(e -> showTransactionsView());
-
         budgetGoalsBtn.setOnAction(e -> showBudgetGoalsView());
-
-        // Logs the current user out of the application
+        profileBtn.setOnAction(e -> showProfileView());
         logOutBtn.setOnAction(e -> authManager.logout());
 
-        // Logout button has a different style for emphasis
         logOutBtn.setStyle(
                 "-fx-background-color: #E53935;"
-                        + "-fx-text-fill: white;"
-                        + "-fx-background-radius: 6;"
-                        + "-fx-font-weight: bold;"
+                + "-fx-text-fill: white;"
+                + "-fx-background-radius: 6;"
+                + "-fx-font-weight: bold;"
         );
-
-        // Apply shared button style
+        
         homeBtn.setStyle(btnStyle);
+        budgetGoalsBtn.setStyle(btnStyle);
         transactionsBtn.setStyle(btnStyle);
+        profileBtn.setStyle(btnStyle);
 
-        // Create header layout
-        HBox header = new HBox(10, homeBtn, transactionsBtn, logOutBtn);
-
-        // Header styling
+        HBox header = new HBox(10, homeBtn, transactionsBtn, budgetGoalsBtn, profileBtn, logOutBtn);
         header.setStyle("-fx-padding: 10; -fx-background-color: " + CARD + ";");
-
         return header;
     }
 
@@ -207,8 +199,16 @@ public class DashboardView {
      */
     public void showBudgetGoalsView() {
 
-        AddBudgetGoalView view = new AddBudgetGoalView();
+        BudgetGoalView view = new BudgetGoalView();
 
+        root.setCenter(view.getView());
+    }
+    
+    /**
+     * Displays the Profile View in the dashboard center.
+     */
+    public void showProfileView() {
+        ProfileView view = new ProfileView();
         root.setCenter(view.getView());
     }
 }

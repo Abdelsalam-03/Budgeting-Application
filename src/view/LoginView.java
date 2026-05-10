@@ -8,10 +8,9 @@ import javafx.scene.layout.VBox;
 import manager.AuthenticationManager;
 
 public class LoginView {
-
+    private static final String SUB    = "#A0A3B1";
     // Auth manager
     private final AuthenticationManager authManager;
-
     // GUI components
     private TextField emailField;
     private PasswordField passwordField;
@@ -36,7 +35,11 @@ public class LoginView {
 
         loginBtn.setOnAction(e -> loginHandler());
         
-
+        loginBtn.setStyle("-fx-background-color: "+ SUB +";"
+                + "-fx-text-fill: white;"
+                + "-fx-background-radius: 6;"
+                + "-fx-font-weight: bold;");
+        
         // Form Layout
         VBox form = new VBox(15,
                 title,

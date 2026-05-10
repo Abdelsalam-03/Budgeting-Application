@@ -90,8 +90,8 @@ public class BudgetGoal extends Model {
     public static BudgetGoal create(int userId, String name,
             double targetAmount, int categoryId, Date deadline) {
         try {
-            String[] cols = {"name", "user_id", "target", "expected_date", "saved_amount", "is_completed"};
-            Object[] values = {name, userId, targetAmount, deadline, 0, false};
+            String[] cols = {"name", "user_id", "target", "expected_date", "saved_amount", "is_completed", "category_id"};
+            Object[] values = {name, userId, targetAmount, deadline, 0, false, categoryId};
             int id = new BudgetGoal().insertAndReturnId(cols, values);
             return new BudgetGoal(id, userId, name, targetAmount, 0.0, categoryId, deadline, false);
         } catch (SQLException e) {
@@ -112,7 +112,7 @@ public class BudgetGoal extends Model {
                             rs.getString("name"),
                             rs.getDouble("target"),
                             rs.getDouble("saved_amount"),
-                            1,
+                            rs.getInt("category_id"),
                             Date.from(LocalDate.parse(rs.getString("expected_date")).atStartOfDay(ZoneId.systemDefault()).toInstant()),
                             rs.getBoolean("is_completed")));
         } catch (SQLException e) {
@@ -122,28 +122,34 @@ public class BudgetGoal extends Model {
 
     // Edit goal fields
     public void edit(String newName, double newTargetAmount, int newCategoryId, Date newDeadline) {
-//        if (newName == null || newName.isEmpty()) {
-//            throw new RuntimeException("Goal name must not be empty");
-//        }
-//        if (newTargetAmount <= 0) {
-//            throw new RuntimeException("Target amount must be positive");
-//        }
-//
-//        for (BudgetGoal g : goals) {
-//            if (g.id == this.id) {
-//                g.name = newName;
-//                g.targetAmount = newTargetAmount;
-//                g.categoryId = newCategoryId;
-//                g.deadline = newDeadline;
-//                g.isCompleted = g.currentAmount >= g.targetAmount;
-//                this.name = newName;
-//                this.targetAmount = newTargetAmount;
-//                this.categoryId = newCategoryId;
-//                this.deadline = newDeadline;
-//                this.isCompleted = g.isCompleted;
-//                return;
-//            }
-//        }
+        List<String> cols = new ArrayList<>();
+        List<Object> values = new ArrayList<>();
+        if (newName == null || newName.isEmpty()) {
+            cols.add("name");
+            values.add(newName);
+        }
+        if (newTargetAmount <= 0) {
+            cols.add("target");
+            values.add(newTargetAmount);
+        }
+        
+        if (newDeadline == null ) {
+            cols.add("expected_date");
+            values.add(newDeadline);
+        }
+        
+        if (newCategoryId == 0) {
+            cols.add("category_id");
+            values.add(newCategoryId);
+        }
+        
+        if (!cols.isEmpty()) {
+            try{
+                this.update(cols.toArray(new String[0]), values.toArray(), new String[]{"user_id"}, new Object[]{userId});
+            } catch (Exception e){
+                throw new RuntimeException ("Excepton Occurred");
+            }
+        }
     }
 
     // Add progress toward the goal

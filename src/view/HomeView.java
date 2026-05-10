@@ -21,11 +21,6 @@ import java.util.List;
  * DashboardView – home screen showing balance, stats, recent transactions,
  * and budget warnings.
  *
- * Follows the same getView() pattern as the rest of the team's views.
- *
- * Usage in MainView.java:
- *   DashboardView dash = new DashboardView(() -> showBudgetingView());
- *   root.setCenter(dash.getView());
  */
 public class HomeView {
 
@@ -114,7 +109,7 @@ public class HomeView {
         VBox card = card();
         card.getChildren().addAll(
                 lbl("Total Balance", 13, FontWeight.NORMAL, SUB),
-                lbl(String.format("$%.2f", balance), 28, FontWeight.BOLD, balance >= 0 ? GREEN : RED),
+                lbl(String.format("EGP%.2f", balance), 28, FontWeight.BOLD, balance >= 0 ? GREEN : RED),
                 new HBox(32, infoCol("Income", income, GREEN), infoCol("Expenses", expenses, RED)));
         return card;
     }
@@ -123,7 +118,7 @@ public class HomeView {
         VBox col = new VBox(2);
         col.getChildren().addAll(
                 lbl(title, 12, FontWeight.NORMAL, SUB),
-                lbl(String.format("$%.2f", amount), 15, FontWeight.BOLD, color));
+                lbl(String.format("EGP%.2f", amount), 15, FontWeight.BOLD, color));
         return col;
     }
 
@@ -161,7 +156,7 @@ public class HomeView {
         row.getChildren().addAll(
                 lbl(isIncome ? "↑" : "↓", 16, FontWeight.BOLD, color),
                 info, sp,
-                lbl((isIncome ? "+" : "-") + "$" + String.format("%.2f", t.amount),
+                lbl((isIncome ? "+" : "-") + "EGP" + String.format("%.2f", t.amount),
                     14, FontWeight.BOLD, color));
         return row;
     }
@@ -176,7 +171,7 @@ public class HomeView {
 
         VBox info = new VBox(2,
                 lbl(b.getCategory(), 13, FontWeight.BOLD, WHITE),
-                lbl(String.format("Spent $%.2f of $%.2f", b.getSpent(), b.amount),
+                lbl(String.format("Spent EGP%.2f of EGP%.2f", b.getSpent(), b.amount),
                     11, FontWeight.NORMAL, SUB));
         Region sp = new Region();
         HBox.setHgrow(sp, Priority.ALWAYS);

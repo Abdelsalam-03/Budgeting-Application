@@ -8,6 +8,9 @@ import javafx.scene.layout.VBox;
 import manager.AuthenticationManager;
 
 public class SignupView {
+    // Colors
+    private static final String SUB    = "#A0A3B1";
+
 
     // Auth manager
     private final AuthenticationManager authManager;
@@ -40,6 +43,11 @@ public class SignupView {
         message = new Label();
 
         signupBtn.setOnAction(e -> signupHandler());
+        
+        signupBtn.setStyle("-fx-background-color: "+ SUB +";"
+                + "-fx-text-fill: white;"
+                + "-fx-background-radius: 6;"
+                + "-fx-font-weight: bold;");
 
         // Form Layout
         VBox form = new VBox(15, title, nameField, emailField, passwordField, signupBtn, message);

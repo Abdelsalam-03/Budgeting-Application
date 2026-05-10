@@ -18,18 +18,14 @@ import java.util.List;
 import model.BudgetCategory;
 
 /**
- * BudgetingView – Budgets list screen + inline Create/Edit form (US #4).
+ * BudgetingView – Budgets list screen + inline Create/Edit form (US 4).
  *
- * Follows the same getView() pattern as the rest of the team's views.
- *
- * Usage in MainView.java: BudgetingView bv = new BudgetingView(() ->
- * showDashboard()); root.setCenter(bv.getView());
  */
 public class BudgetingView {
 
     private BudgetController controller;
     private final YearMonth period = YearMonth.now();
-    private final Runnable onGoBack;   // callback → back to Dashboard
+    private final Runnable onGoBack;   // callback back to Dashboard
 
     private static final String BG = "#1A1D2E";
     private static final String CARD = "#252840";
@@ -107,7 +103,7 @@ public class BudgetingView {
         card.setStyle("-fx-background-color:" + CARD + "; -fx-background-radius:12;");
 
         Label cat = lbl(b.getCategory(), 15, FontWeight.BOLD, WHITE);
-        Label amtLbl = lbl(String.format("$%.2f spent of $%.2f", b.getSpent(), b.amount),
+        Label amtLbl = lbl(String.format("EGP%.2f spent of EGP%.2f", b.getSpent(), b.amount),
                 13, FontWeight.NORMAL, SUB);
 
         ProgressBar bar = new ProgressBar(Math.min(b.getSpent().doubleValue() / b.amount, 1.0));
@@ -116,7 +112,7 @@ public class BudgetingView {
 
         String statusTxt = b.isOverLimit() ? "Over limit!"
                 : b.isNearLimit() ? "Near limit"
-                : String.format("$%.2f remaining", b.getRemaining());
+                : String.format("EGP%.2f remaining", b.getRemaining());
         String statusColor = b.isOverLimit() ? RED : b.isNearLimit() ? ORANGE : GREEN;
 
         Button editBtn = btn("Edit", ACCENT);
@@ -172,7 +168,7 @@ public class BudgetingView {
 
         VBox form = new VBox(10,
                 lbl("Category", 13, FontWeight.NORMAL, SUB), categoryBox,
-                lbl("Amount ($)", 13, FontWeight.NORMAL, SUB), amountField,
+                lbl("Amount (EGP)", 13, FontWeight.NORMAL, SUB), amountField,
                 lbl("Period", 13, FontWeight.NORMAL, SUB), periodBox,
                 errorLbl);
         form.setPadding(new Insets(20));

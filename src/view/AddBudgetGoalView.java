@@ -13,6 +13,7 @@ import java.util.Date;
 
 import manager.BudgetGoalManager;
 import manager.AuthenticationManager;
+import model.GoalCategory;
 import resource.BudgetGoalResource;
 
 public class AddBudgetGoalView {
@@ -39,9 +40,9 @@ public class AddBudgetGoalView {
         TextField targetField = new TextField();
         targetField.setPromptText("Enter target amount");
 
-        ComboBox<String> categoryDropdown = new ComboBox<>();
+        ComboBox<GoalCategory> categoryDropdown = new ComboBox<>();
         categoryDropdown.getItems().addAll(
-                "Savings / General", "Food", "Transport", "Entertainment", "Utilities", "Shopping"
+                GoalCategory.all(userId)
         );
         categoryDropdown.getSelectionModel().selectFirst();
 
@@ -73,7 +74,7 @@ public class AddBudgetGoalView {
                 }
 
                 double targetAmount = Double.parseDouble(targetField.getText().trim());
-                int categoryId = categoryDropdown.getSelectionModel().getSelectedIndex();
+                int categoryId = categoryDropdown.getSelectionModel().getSelectedItem().id;
 
                 Date deadline = noDeadlineCheck.isSelected()
                         ? null
