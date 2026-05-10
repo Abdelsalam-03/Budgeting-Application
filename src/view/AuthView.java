@@ -7,6 +7,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
 public class AuthView {
+    
+    // Colors
+    private static final String BG     = "#1A1D2E";
+    private static final String SUB    = "#A0A3B1";
+
 
     private final BorderPane root;
     
@@ -20,7 +25,7 @@ public class AuthView {
         VBox layout = new VBox();
         
         HBox header = createHeader();
-
+        root.setStyle("-fx-background-color: "+ BG +";");
         root.setTop(header);
         showLoginView();
         layout.getChildren().add(root);
@@ -29,12 +34,19 @@ public class AuthView {
     }
     
     private HBox createHeader() {
+        String btnStyle = "-fx-background-color: "+ SUB +";"
+                + "-fx-text-fill: white;"
+                + "-fx-background-radius: 6;"
+                + "-fx-font-weight: bold;";
         ToggleButton logInBtn = new ToggleButton("Log In");
         ToggleButton signUpBtn = new ToggleButton("Sign Up");
 
         ToggleGroup group = new ToggleGroup();
         logInBtn.setToggleGroup(group);
         signUpBtn.setToggleGroup(group);
+        
+        logInBtn.setStyle(btnStyle);
+        signUpBtn.setStyle(btnStyle);
 
         // Default selected
         logInBtn.setSelected(true);
@@ -44,7 +56,8 @@ public class AuthView {
         signUpBtn.setOnAction(e -> showSignupView());
         
         HBox header = new HBox(10, logInBtn, signUpBtn);
-        header.setStyle("-fx-padding: 10; -fx-background-color: white;");
+        header.setStyle("-fx-padding: 10; -fx-background-color: "+ BG +";");
+
 
         return header;
     }

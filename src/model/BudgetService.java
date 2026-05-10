@@ -1,9 +1,7 @@
 package model;
 
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,13 +16,13 @@ import manager.AuthenticationManager;
  * and managers to share the same data.</p>
  *
  * <p>Responsibilities include:
+ * </p>
  * <ul>
  *   <li>Creating and editing budgets</li>
  *   <li>Retrieving budget and transaction data</li>
  *   <li>Providing dashboard summary statistics</li>
  *   <li>Detecting budget warnings (near or over limit)</li>
  * </ul>
- * </p>
  */
 public class BudgetService {
 
@@ -33,6 +31,9 @@ public class BudgetService {
 
     /** List of all transactions loaded for the current user. */
     private List<Transaction> transactions = new ArrayList<>();
+    
+    /** List of all transactions loaded for the current user. */
+    private List<BudgetGoal> goals = new ArrayList<>();
 
     /** The ID of the currently authenticated user. */
     private int userId;
@@ -58,6 +59,7 @@ public class BudgetService {
         instance.userId = AuthenticationManager.getAuthenticationManager().getUser().getID();
         instance.transactions = Transaction.all(instance.userId);
         instance.budgets = Budget.all(instance.userId);
+        instance.goals = BudgetGoal.all(instance.userId);
         return instance;
     }
 
@@ -221,17 +223,17 @@ public class BudgetService {
      * Returns a summary count array for dashboard status display.
      *
      * <p>The returned array contains:
+     * </p>
      * <ul>
      *   <li>Index 0: total number of transactions</li>
      *   <li>Index 1: total number of budgets</li>
      *   <li>Index 2: reserved for future use (currently 0)</li>
      * </ul>
-     * </p>
      *
      * @return an int array of size 3 with status counts
      */
     public int[] getStatusCounts() {
-        return new int[]{transactions.size(), budgets.size(), 0};
+        return new int[]{transactions.size(), budgets.size(), goals.size()};
     }
 
     /**

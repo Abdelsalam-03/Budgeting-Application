@@ -17,7 +17,7 @@ public class TransactionManager {
             // Auto-update matching budget goals by category
             if (isIncome) {
                 BudgetGoalManager budgetGoalManager = new BudgetGoalManager();
-                budgetGoalManager.updateGoalsForTransaction(userId, 1, amount);
+                budgetGoalManager.updateGoalsForTransaction(userId, categoryId, amount);
             }
 
         } catch (Exception e) {

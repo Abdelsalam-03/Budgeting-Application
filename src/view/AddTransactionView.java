@@ -11,15 +11,17 @@ import javafx.scene.layout.*;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import manager.AuthenticationManager;
 import manager.BudgetController;
 
 import manager.TransactionManager;
 import model.BudgetCategory;
+import model.GoalCategory;
 
 public class AddTransactionView {
 
     public Parent getView() {
-
+        int userId = AuthenticationManager.getAuthenticationManager().getUser().getID();
         // Toggle (Income / Expense)
         ToggleButton incomeToggle = new ToggleButton("Income");
         ToggleButton expenseToggle = new ToggleButton("Expense");
@@ -49,10 +51,14 @@ public class AddTransactionView {
         TextField amountField = new TextField();
         amountField.setPromptText("Enter amount");
 
-                ComboBox<BudgetCategory> categoryDropdown = new ComboBox<>();
-                BudgetController controller = BudgetController.getInstance();
+        ComboBox<BudgetCategory> categoryDropdown = new ComboBox<>();
+        BudgetController controller = BudgetController.getInstance();
         categoryDropdown.getItems().addAll(controller.getCategories());
         categoryDropdown.setPromptText("Select a category");
+
+        ComboBox<GoalCategory> goalDropdown = new ComboBox<>();
+        goalDropdown.getItems().addAll(GoalCategory.all(userId));
+        goalDropdown.setPromptText("Select a category");
 
         DatePicker datePicker = new DatePicker(LocalDateTime.now().toLocalDate());
 
@@ -68,6 +74,11 @@ public class AddTransactionView {
                 new Label("Category"),
                 categoryDropdown
         );
+        // Layout containers
+        VBox goalBox = new VBox(5,
+                new Label("Category"),
+                goalDropdown
+        );
 
         // Initially hidden (because default is Income)
         categoryBox.setVisible(false);
@@ -79,6 +90,8 @@ public class AddTransactionView {
 
             categoryBox.setVisible(isExpense);
             categoryBox.setManaged(isExpense);
+            goalBox.setVisible(!isExpense);
+            goalBox.setManaged(!isExpense);
         });
 
         // Now checkbox behavior
@@ -100,10 +113,10 @@ public class AddTransactionView {
             boolean isIncome = incomeToggle.isSelected();
 
             double amount = Double.parseDouble(amountField.getText());
-            Integer category = isIncome ? null : categoryDropdown.getValue().id;
+            Integer category = isIncome ? goalDropdown.getValue().id : categoryDropdown.getValue().id;
             LocalDateTime date = LocalDateTime.of(datePicker.getValue(), LocalTime.of(0, 0, 0, 0));
             String notes = notesArea.getText();
-                        
+
             TransactionManager tmg = new TransactionManager();
             try {
                 tmg.addTransaction(amount, category, date, notes, isIncome);
@@ -119,6 +132,7 @@ public class AddTransactionView {
                 toggleBox,
                 labeledField("Amount", amountField),
                 categoryBox,
+                goalBox,
                 labeledField("Date", new HBox(10, datePicker, nowCheck)),
                 labeledField("Notes", notesArea),
                 createBtn
